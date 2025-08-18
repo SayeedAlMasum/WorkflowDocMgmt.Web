@@ -1,0 +1,26 @@
+﻿@* DocumentTypes.cshtml *@
+@using System.Data
+@model DataTable
+
+<h2>Document Types</h2>
+<a asp-action="CreateDocumentType" class="btn btn-primary mb-2">Add New</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataRow row in Model.Rows)
+        {
+            <tr>
+                <td>@row["DocumentTypeId"]</td>
+                <td>@row["Name"]</td>
+                <td>@row["Description"]</td>
+            </tr>
+        }
+    </tbody>
+</table>
