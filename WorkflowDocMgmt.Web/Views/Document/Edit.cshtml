@@ -1,0 +1,25 @@
+﻿@* Document/Edit.cshtml *@
+@model WorkflowDocMgmt.Web.Models.Document
+
+@{
+    ViewData["Title"] = "Update Document Stage";
+}
+
+<h2>Update Document Stage</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="DocumentId" />
+
+    <div class="form-group mb-2">
+        <label>Document Title</label>
+        <input asp-for="Title" class="form-control" readonly />
+    </div>
+
+    <div class="form-group mb-2">
+        <label for="StageId">Select New Stage</label>
+        <select asp-for="CurrentStageId" class="form-control" asp-items="ViewBag.Stages"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

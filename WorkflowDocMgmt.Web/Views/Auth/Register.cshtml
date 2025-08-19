@@ -1,0 +1,25 @@
+﻿@* Admin/Register.cshtml *@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>Register Admin</h2>
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label>Username</label>
+        <input name="username" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input name="password" type="password" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Access Level</label>
+        <select name="accessLevel" class="form-control">
+            <option value="ReadWrite">ReadWrite</option>
+            <option value="ReadOnly">ReadOnly</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Register</button>
+</form>

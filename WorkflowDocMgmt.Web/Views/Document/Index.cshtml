@@ -1,65 +1,46 @@
 ﻿@* Document/Index.cshtml *@
-@model List<WorkflowDocMgmt.Web.Models.Document>
+@model IEnumerable<WorkflowDocMgmt.Web.Models.Document>
+
 @{
-    ViewData["Title"] = "Documents";
+    ViewData["Title"] = "Document List";
 }
-
-<h2>Documents</h2>
-
 <a class="btn btn-primary" href="/Document/Upload">Upload New Document</a>
 <br />
-<br />
+<h2>Document List</h2>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-striped" id="documentTable">
     <thead>
         <tr>
             <th>Title</th>
-            <th>Uploaded By</th>
             <th>Status</th>
-            <th>Workflow Progress</th>
+            <th>Current Stage</th>
             <th>Uploaded On</th>
-            <th>Actions</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var doc in Model)
         {
-            // Assume max 4 stages (Draft, Submitted, Review, Approved)
-            var totalStages = 4;
-            var progressPercent = (doc.CurrentStageId * 100) / totalStages;
-
             <tr>
                 <td>@doc.Title</td>
-                <td>@doc.CreatedBy</td>
                 <td>@doc.Status</td>
+                <td>@doc.CurrentStageName</td>
+                <td>@doc.UploadedOn.ToString("dd/MM/yyyy")</td>
                 <td>
-                    <div class="progress" style="height: 25px;">
-                        <div class="progress-bar bg-success"
-                             role="progressbar"
-                             style="width:@progressPercent%"
-                             aria-valuenow="@progressPercent"
-                             aria-valuemin="0"
-                             aria-valuemax="100">
-                            @doc.CurrentStageName
-                        </div>
-                    </div>
-                </td>
-                <td>@doc.UploadedOn.ToString("dd-MMM-yyyy")</td>
-                <td>
-                    <a class="btn btn-info btn-sm" href="@doc.FilePath" target="_blank">Download</a>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a class="btn btn-success btn-sm"
-                           href="/Document/UpdateStatus?id=@doc.DocumentId&status=Approved&nextStageId=@(doc.CurrentStageId+1)">
-                            Next Stage
-                        </a>
-                        <a class="btn btn-danger btn-sm"
-                           href="/Document/UpdateStatus?id=@doc.DocumentId&status=Rejected">
-                            Reject
-                        </a>
-                    }
+                    <a asp-action="Edit" asp-route-id="@doc.DocumentId" class="btn btn-sm btn-primary">Update Stage</a>
+                    <a asp-action="Download" asp-route-id="@doc.DocumentId" class="btn btn-sm btn-success">Download</a>
+                    <a asp-action="Delete" asp-route-id="@doc.DocumentId" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#documentTable').DataTable();
+        });
+    </script>
+}

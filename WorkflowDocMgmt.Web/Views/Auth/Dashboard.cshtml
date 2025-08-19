@@ -1,0 +1,32 @@
+﻿@* Auth/Dashboard.cshtml *@
+@{
+    ViewData["Title"] = "Dashboard";
+    var admins = ViewBag.Admins as List<WorkflowDocMgmt.Web.Models.Admin>;
+}
+
+<h2>Welcome, @Context.Session.GetString("Username")</h2>
+
+<a class="btn btn-sm btn-danger" asp-action="Logout">Logout</a>
+
+<hr />
+
+<h3>Admins List</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Access Level</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var admin in admins)
+        {
+            <tr>
+                <td>@admin.Username</td>
+                <td>@admin.AccessLevel</td>
+                <td>@admin.CreatedAt</td>
+            </tr>
+        }
+    </tbody>
+</table>

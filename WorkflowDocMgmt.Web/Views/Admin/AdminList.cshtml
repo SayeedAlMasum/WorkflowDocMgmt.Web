@@ -1,0 +1,28 @@
+﻿@* Admins/AdminList.cshtml *@
+@model IEnumerable<WorkflowDocMgmt.Web.Models.ViewModels.AdminRegisterViewModel>
+
+@{
+    ViewData["Title"] = "Admins";
+}
+
+<h2>Admins</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Access Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var admin in Model)
+        {
+            <tr>
+                <td>@admin.Username</td>
+                <td>@admin.AccessLevel</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" asp-controller="Admin" asp-action="Register">Register New Admin</a>
