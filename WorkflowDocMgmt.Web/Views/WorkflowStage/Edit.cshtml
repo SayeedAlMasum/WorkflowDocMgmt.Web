@@ -1,0 +1,17 @@
+﻿@* WorkflowStage/Edit.cshtml *@
+@model WorkflowDocMgmt.Web.Models.WorkflowStage
+@{
+    ViewData["Title"] = "Edit Workflow Stage";
+}
+
+<h2>Edit Workflow Stage</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="StageId" />
+    <div class="form-group">
+        <label>Stage Name</label>
+        <input type="text" asp-for="StageName" class="form-control" required />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>

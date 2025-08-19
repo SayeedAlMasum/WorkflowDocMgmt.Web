@@ -1,0 +1,35 @@
+﻿@* WorkflowStage/Index.cshtml *@
+@model List<WorkflowDocMgmt.Web.Models.WorkflowStage>
+@{
+    ViewData["Title"] = "Workflow Stages";
+}
+
+<h2>Workflow Stages</h2>
+
+<a class="btn btn-primary" href="/WorkflowStage/Create">Add New Stage</a>
+<br />
+<br />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Stage ID</th>
+            <th>Stage Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stage in Model)
+        {
+            <tr>
+                <td>@stage.StageId</td>
+                <td>@stage.StageName</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" href="/WorkflowStage/Edit/@stage.StageId">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="/WorkflowStage/Delete/@stage.StageId"
+                       onclick="return confirm('Are you sure?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
