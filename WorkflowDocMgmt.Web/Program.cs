@@ -6,16 +6,15 @@ using WorkflowDocMgmt.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// MVC
 builder.Services.AddControllersWithViews();
 
-// Repositories
+// DI for repositories
+builder.Services.AddSingleton<Db>();
 builder.Services.AddSingleton<MasterDataRepository>();
 builder.Services.AddSingleton<DocumentRepository>();
 builder.Services.AddSingleton<WorkflowRepository>();
 builder.Services.AddSingleton<AdminRepository>();
-
-builder.Services.AddSingleton<Db>();
 
 var app = builder.Build();
 
@@ -28,7 +27,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(

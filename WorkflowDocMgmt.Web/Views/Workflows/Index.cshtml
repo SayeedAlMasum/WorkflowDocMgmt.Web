@@ -1,0 +1,33 @@
+﻿@* Workflows/Index.cshtml *@
+@model System.Data.DataTable
+@{
+    ViewData["Title"] = "Workflows";
+}
+
+<h2>Workflows</h2>
+
+<a class="btn btn-primary mb-2" asp-action="Create">Add New Workflow</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Created At</th>
+            <th>Created By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in Model.Rows)
+        {
+            <tr>
+                <td>@row["WorkflowId"]</td>
+                <td>@row["Name"]</td>
+                <td>@row["Type"]</td>
+                <td>@row["CreatedAt"]</td>
+                <td>@row["CreatedBy"]</td>
+            </tr>
+        }
+    </tbody>
+</table>

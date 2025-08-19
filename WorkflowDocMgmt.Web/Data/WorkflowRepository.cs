@@ -1,7 +1,8 @@
 ﻿//WorkflowRepository.cs
-using WorkflowDocMgmt.Web.Models;
-using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using WorkflowDocMgmt.Web.Models;
 
 namespace WorkflowDocMgmt.Web.Data
 {
@@ -19,10 +20,26 @@ namespace WorkflowDocMgmt.Web.Data
             {
                 new SqlParameter("@Name", workflow.Name),
                 new SqlParameter("@Type", workflow.Type.ToString()),
-                new SqlParameter("@AssignedAdmins", string.Join(",", workflow.AssignedAdminIds)),
                 new SqlParameter("@CreatedBy", workflow.CreatedBy)
             };
-            return _db.ExecuteDml("sp_CreateWorkflow", parameters);
+
+            int workflowId = _db.ExecuteDmlScalar("sp_CreateWorkflow", parameters);
+
+            // Assign admins to workflow
+            if (workflow.AssignedAdminIds != null)
+            {
+                foreach (var adminId in workflow.AssignedAdminIds)
+                {
+                    var assignParams = new SqlParameter[]
+                    {
+                        new SqlParameter("@WorkflowId", workflowId),
+                        new SqlParameter("@AdminId", adminId)
+                    };
+                    _db.ExecuteDml("sp_AssignAdminToWorkflow", assignParams);
+                }
+            }
+
+            return workflowId;
         }
     }
 }

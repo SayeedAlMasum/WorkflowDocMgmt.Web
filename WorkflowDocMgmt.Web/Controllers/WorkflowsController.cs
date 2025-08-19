@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WorkflowDocMgmt.Web.Data;
 using WorkflowDocMgmt.Web.Models;
 using System.Collections.Generic;
+using System.Data;
 
 namespace WorkflowDocMgmt.Web.Controllers
 {
@@ -38,7 +39,7 @@ namespace WorkflowDocMgmt.Web.Controllers
                 Name = name,
                 Type = type,
                 AssignedAdminIds = assignedAdminIds,
-                CreatedBy = 1 // replace with current logged-in admin ID
+                CreatedBy = 1 // logged-in admin ID placeholder
             };
             _repo.CreateWorkflow(workflow);
             return RedirectToAction("Index");

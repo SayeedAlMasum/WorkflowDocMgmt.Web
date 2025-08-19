@@ -1,5 +1,5 @@
 ﻿//Db.cs
-using System;
+// Db.cs
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -9,43 +9,41 @@ namespace WorkflowDocMgmt.Web.Data
     public class Db
     {
         private readonly string _connectionString;
-
-        public Db(IConfiguration configuration)
+        public Db(IConfiguration config)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-                                ?? throw new ArgumentNullException(nameof(configuration), "Connection string not found.");
+            _connectionString = config.GetConnectionString("DefaultConnection");
         }
 
-        public DataTable ExecuteSelect(string storedProc, SqlParameter[]? parameters = null)
+        public DataTable ExecuteSelect(string spName, SqlParameter[] parameters = null)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(storedProc, conn)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-
-            if (parameters != null)
-                cmd.Parameters.AddRange(parameters);
-
+            using var con = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(spName, con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            if (parameters != null) cmd.Parameters.AddRange(parameters);
+            using var adapter = new SqlDataAdapter(cmd);
             var dt = new DataTable();
-            using var da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+            adapter.Fill(dt);
             return dt;
         }
 
-        public int ExecuteDml(string storedProc, SqlParameter[]? parameters = null)
+        public int ExecuteDml(string spName, SqlParameter[] parameters)
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(storedProc, conn)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-
-            if (parameters != null)
-                cmd.Parameters.AddRange(parameters);
-
-            conn.Open();
+            using var con = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(spName, con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddRange(parameters);
+            con.Open();
             return cmd.ExecuteNonQuery();
+        }
+
+        public int ExecuteDmlScalar(string spName, SqlParameter[] parameters)
+        {
+            using var con = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand(spName, con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddRange(parameters);
+            con.Open();
+            return Convert.ToInt32(cmd.ExecuteScalar());
         }
     }
 }
