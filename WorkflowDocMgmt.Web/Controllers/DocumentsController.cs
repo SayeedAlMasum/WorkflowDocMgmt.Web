@@ -21,7 +21,7 @@ public class DocumentController : Controller
         List<Document> documents = new List<Document>();
         using (SqlConnection con = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
         {
-            SqlCommand cmd = new SqlCommand("sp_GetAllDocuments", con);
+            SqlCommand cmd = new SqlCommand("sp_GetDocuments", con);
             cmd.CommandType = CommandType.StoredProcedure;
             con.Open();
             SqlDataReader reader = cmd.ExecuteReader();
@@ -32,7 +32,7 @@ public class DocumentController : Controller
                     DocumentId = Convert.ToInt32(reader["DocumentId"]),
                     Title = reader["Title"].ToString(),
                     FilePath = reader["FilePath"].ToString(),
-                    UploadedBy = reader["UploadedBy"].ToString(),
+                    CreatedBy = reader["CreatedBy"].ToString(),
                     Status = reader["Status"].ToString(),
                     CurrentStageName = reader["StageName"]?.ToString(),
                     UploadedOn = Convert.ToDateTime(reader["UploadedOn"])

@@ -1,0 +1,27 @@
+﻿@* CreateDocumentType.cshtml *@
+@model WorkflowDocMgmt.Web.Models.DocumentType
+@{
+    ViewData["Title"] = "Create Document Type";
+}
+
+<h2>Create Document Type</h2>
+
+<form asp-action="CreateDocumentType" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="DocumentTypes" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,46 +1,46 @@
 ﻿//MasterDataRepository.cs
-using WorkflowDocMgmt.Web.Models;
-using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using WorkflowDocMgmt.Web.Models;
 
 namespace WorkflowDocMgmt.Web.Data
 {
     public class MasterDataRepository
     {
-        private readonly Db _db;
+        private readonly IConfiguration _config;
 
-        public MasterDataRepository(Db db) => _db = db;
-
-        public DataTable GetDocumentTypes() => _db.ExecuteSelect("sp_GetDocumentTypes");
-
-        public int CreateDocumentType(DocumentType docType)
+        public MasterDataRepository(IConfiguration config)
         {
-            var parameters = new SqlParameter[]
-            {
-                new SqlParameter("@Name", docType.Name),
-                new SqlParameter("@Description", docType.Description)
-            };
-            return _db.ExecuteDml("sp_CreateDocumentType", parameters);
+            _config = config;
         }
 
-        public int UpdateDocumentType(DocumentType docType)
+        // Get all document types
+        public DataTable GetDocumentTypes()
         {
-            var parameters = new SqlParameter[]
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                new SqlParameter("@DocumentTypeId", docType.DocumentTypeId),
-                new SqlParameter("@Name", docType.Name),
-                new SqlParameter("@Description", docType.Description)
-            };
-            return _db.ExecuteDml("sp_UpdateDocumentType", parameters);
+                SqlCommand cmd = new SqlCommand("sp_GetDocumentTypes", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
         }
 
-        public int DeleteDocumentType(int id)
+        // Create new document type
+        public void CreateDocumentType(DocumentType docType)
         {
-            var parameters = new SqlParameter[]
+            using (SqlConnection con = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                new SqlParameter("@DocumentTypeId", id)
-            };
-            return _db.ExecuteDml("sp_DeleteDocumentType", parameters);
+                SqlCommand cmd = new SqlCommand("sp_CreateDocumentType", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Name", docType.Name);
+                cmd.Parameters.AddWithValue("@Description", docType.Description ?? (object)DBNull.Value);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
