@@ -1,0 +1,36 @@
+﻿@* Create.cshtml *@
+@using System.Data
+@{
+    ViewData["Title"] = "Create Workflow";
+    var admins = ViewBag.Admins as DataTable;
+}
+
+<h2>Create Workflow</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Workflow Name</label>
+        <input type="text" name="name" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Workflow Type</label>
+        <select name="type" class="form-control" required>
+            <option value="Document">Document</option>
+            <option value="Approval">Approval</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Assign Admins</label>
+        <select name="assignedAdminIds" class="form-control" multiple>
+            @foreach (DataRow row in admins.Rows)
+            {
+                <option value="@row["AdminId"]">@row["UserName"]</option>
+            }
+        </select>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

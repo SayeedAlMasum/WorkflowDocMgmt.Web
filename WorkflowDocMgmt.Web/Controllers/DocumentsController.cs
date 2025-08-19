@@ -96,19 +96,24 @@ public class DocumentController : Controller
         return RedirectToAction("Index");
     }
 
-    // Update Status (Approve/Reject & Move Next Stage)
     public IActionResult UpdateStatus(int id, string status, int? nextStageId)
     {
+        string currentUser = User.Identity.Name ?? "Anonymous";
+
         using (SqlConnection con = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
         {
-            SqlCommand cmd = new SqlCommand("sp_UpdateDocumentStatus", con);
+            SqlCommand cmd = new SqlCommand("sp_UpdateDocumentStage", con); 
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@DocumentId", id);
             cmd.Parameters.AddWithValue("@Status", status);
-            cmd.Parameters.AddWithValue("@NextStageId", nextStageId.HasValue ? nextStageId.Value : (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@NextStageId", nextStageId.HasValue ? (object)nextStageId.Value : DBNull.Value);
+            cmd.Parameters.AddWithValue("@ChangedBy", currentUser);
+
             con.Open();
             cmd.ExecuteNonQuery();
         }
+
+        TempData["Message"] = $"Document status updated to {status}";
         return RedirectToAction("Index");
     }
 }
