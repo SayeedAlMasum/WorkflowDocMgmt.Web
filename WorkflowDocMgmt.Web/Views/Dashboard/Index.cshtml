@@ -7,6 +7,11 @@
 
 <h2>Assigned Tasks</h2>
 
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
 @if (!Model.Any())
 {
     <div class="alert alert-info">No pending tasks assigned to you.</div>
@@ -36,9 +41,8 @@ else
                     <td>
                         <form method="post" asp-action="UpdateTaskStatus">
                             <input type="hidden" name="taskId" value="@task.TaskId" />
-                            <button type="submit" name="action" value="Approved" class="btn btn-success btn-sm" @(task.Status != "Pending" ? "disabled" : "")>Approve</button>
-                            <button type="submit" name="action" value="Rejected" class="btn btn-danger btn-sm" @(task.Status != "Pending" ? "disabled" : "")>Reject</button>
-
+                            <button type="submit" name="action" value="Approved" class="btn btn-success btn-sm">Approve</button>
+                            <button type="submit" name="action" value="Rejected" class="btn btn-danger btn-sm">Reject</button>
                         </form>
                     </td>
                 </tr>
